@@ -24,7 +24,8 @@ public static class SleepTracker
             .Build();
 
         var builder = app.MapGroup("/api/v{version:apiVersion}/sleeps")
-            .WithApiVersionSet(apiVersionSet);
+            .WithApiVersionSet(apiVersionSet)
+            .WithOpenApi();
 
         builder.MapGet("/", GetSleeps)
             .WithName(nameof(GetSleeps))
