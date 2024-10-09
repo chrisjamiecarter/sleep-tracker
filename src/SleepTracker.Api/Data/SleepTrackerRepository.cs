@@ -30,6 +30,15 @@ public class SleepTrackerRepository : ISleepTrackerRepository
         await _dataContext.SleepRecord.AddAsync(sleepRecord);
     }
 
+    public async Task DeleteAsync(SleepRecord sleepRecord)
+    {
+        var entity = await _dataContext.SleepRecord.FindAsync(sleepRecord.Id);
+        if (entity is not null)
+        {
+            _dataContext.SleepRecord.Remove(entity);
+        }
+    }
+
     public async Task<IEnumerable<SleepRecord>> ReturnAsync()
     {
         return await _dataContext.SleepRecord.OrderBy(o => o.Started).ToListAsync();
@@ -39,5 +48,17 @@ public class SleepTrackerRepository : ISleepTrackerRepository
     {
         return await _dataContext.SleepRecord.FindAsync(id);
     }
+
+    public async Task UpdateAsync(SleepRecord sleepRecord)
+    {
+        var entity = await _dataContext.SleepRecord.FindAsync(sleepRecord.Id);
+        if (entity is not null)
+        {
+            entity.Started = sleepRecord.Started;
+            entity.Finished = sleepRecord.Finished;
+            _dataContext.SleepRecord.Update(entity);
+        }
+    }
+
     #endregion
 }

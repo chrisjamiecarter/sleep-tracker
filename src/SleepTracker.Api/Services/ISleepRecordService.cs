@@ -8,6 +8,8 @@ namespace SleepTracker.Api.Services;
 public interface ISleepRecordService
 {
     Task<bool> CreateAsync(SleepRecord sleepRecord);
+    Task<bool> DeleteAsync(SleepRecord sleepRecord);
     Task<IEnumerable<SleepRecord>> ReturnAsync();
     Task<SleepRecord?> ReturnAsync(Guid id);
+    Task<bool> UpdateAsync(SleepRecord sleepRecord);
 }

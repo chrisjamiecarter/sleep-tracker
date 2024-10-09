@@ -9,6 +9,8 @@ namespace SleepTracker.Api.Data;
 public interface ISleepTrackerRepository
 {
     Task CreateAsync(SleepRecord sleepRecord);
+    Task DeleteAsync(SleepRecord sleepRecord);
     Task<IEnumerable<SleepRecord>> ReturnAsync();
     Task<SleepRecord?> ReturnAsync(Guid id);
+    Task UpdateAsync(SleepRecord sleepRecord);
 }

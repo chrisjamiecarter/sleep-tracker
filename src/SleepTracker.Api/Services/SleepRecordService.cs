@@ -31,6 +31,14 @@ public class SleepRecordService : ISleepRecordService
         var created = await _unitOfWork.SaveAsync();
         return created > 0;
     }
+
+    public async Task<bool> DeleteAsync(SleepRecord sleepRecord)
+    {
+        await _unitOfWork.SleepRecord.DeleteAsync(sleepRecord);
+        var deleted = await _unitOfWork.SaveAsync();
+        return deleted > 0;
+    }
+
     public async Task<IEnumerable<SleepRecord>> ReturnAsync()
     {
         return await _unitOfWork.SleepRecord.ReturnAsync();
@@ -40,5 +48,13 @@ public class SleepRecordService : ISleepRecordService
     {
         return await _unitOfWork.SleepRecord.ReturnAsync(id);
     }
+
+    public async Task<bool> UpdateAsync(SleepRecord sleepRecord)
+    {
+        await _unitOfWork.SleepRecord.UpdateAsync(sleepRecord);
+        var updated = await _unitOfWork.SaveAsync();
+        return updated > 0;
+    }
+
     #endregion
 }
