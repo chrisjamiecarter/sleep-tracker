@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SleepTracker.Api.Models;
 
 /// <summary>
-/// Represents a SleepRecord model. This acts as both the domain and infrastructure version.
+/// Represents a sleep record model. This acts as both the domain and infrastructure version.
 /// </summary>
 [Table("SleepRecord")]
 public class SleepRecord

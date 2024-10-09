@@ -6,6 +6,5 @@
 public interface IUnitOfWork
 {
     ISleepTrackerRepository SleepRecord { get; set; }
-
     Task<int> SaveAsync();
 }

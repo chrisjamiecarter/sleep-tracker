@@ -69,7 +69,7 @@ public static class SleepTracker
         ? TypedResults.CreatedAtRoute(model.ToResponse(), nameof(GetSleep), new { id = model.Id })
         : TypedResults.BadRequest(new { error = "Unable to create sleep." });
     }
-    
+
     private static async Task<IResult> DeleteSleep([FromRoute] Guid id, [FromServices] ISleepRecordService service)
     {
         var entity = await service.ReturnAsync(id);
