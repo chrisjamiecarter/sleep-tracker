@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SleepTracker.Api.Data;
+using SleepTracker.Api.Services;
 
 namespace SleepTracker.Api.Installers;
 
@@ -19,7 +20,7 @@ public static class DatabaseInstaller
 
         services.AddScoped<ISleepTrackerRepository, SleepTrackerRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        //services.AddScoped<ISeederService, SeederService>();
+        services.AddScoped<ISeederService, SeederService>();
 
         return services;
     }
@@ -29,9 +30,8 @@ public static class DatabaseInstaller
         var context = serviceProvider.GetRequiredService<SleepTrackerDataContext>();
         context.Database.Migrate();
 
-        // TODO:
-        //var seeder = serviceProvider.GetRequiredService<ISeederService>();
-        //seeder.SeedDatabase();
+        var seeder = serviceProvider.GetRequiredService<ISeederService>();
+        seeder.SeedDatabase();
 
         return serviceProvider;
     }
