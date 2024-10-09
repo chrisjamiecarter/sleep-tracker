@@ -12,6 +12,7 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
         builder.Services.AddApi();
+        builder.Services.AddDatabase(builder.Configuration);
 
         var app = builder.Build();
         app.AddMiddleware();
