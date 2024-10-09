@@ -25,10 +25,19 @@ public class SleepTrackerRepository : ISleepTrackerRepository
     #endregion
     #region Methods
 
+    public async Task CreateAsync(SleepRecord sleepRecord)
+    {
+        await _dataContext.SleepRecord.AddAsync(sleepRecord);
+    }
+
     public async Task<IEnumerable<SleepRecord>> ReturnAsync()
     {
         return await _dataContext.SleepRecord.OrderBy(o => o.Started).ToListAsync();
     }
 
+    public async Task<SleepRecord?> ReturnAsync(Guid id)
+    {
+        return await _dataContext.SleepRecord.FindAsync(id);
+    }
     #endregion
 }

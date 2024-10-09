@@ -25,10 +25,20 @@ public class SleepRecordService : ISleepRecordService
     #endregion
     #region Methods
 
+    public async Task<bool> CreateAsync(SleepRecord sleepRecord)
+    {
+        await _unitOfWork.SleepRecord.CreateAsync(sleepRecord);
+        var created = await _unitOfWork.SaveAsync();
+        return created > 0;
+    }
     public async Task<IEnumerable<SleepRecord>> ReturnAsync()
     {
         return await _unitOfWork.SleepRecord.ReturnAsync();
     }
 
+    public async Task<SleepRecord?> ReturnAsync(Guid id)
+    {
+        return await _unitOfWork.SleepRecord.ReturnAsync(id);
+    }
     #endregion
 }

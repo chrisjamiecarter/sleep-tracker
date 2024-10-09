@@ -8,5 +8,7 @@ namespace SleepTracker.Api.Data;
 /// </summary>
 public interface ISleepTrackerRepository
 {
+    Task CreateAsync(SleepRecord sleepRecord);
     Task<IEnumerable<SleepRecord>> ReturnAsync();
+    Task<SleepRecord?> ReturnAsync(Guid id);
 }

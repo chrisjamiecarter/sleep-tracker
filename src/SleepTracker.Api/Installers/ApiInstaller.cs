@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using FluentValidation;
 using Microsoft.AspNetCore.Http.Json;
 using Microsoft.Extensions.Options;
 using SleepTracker.Api.OpenApi;
@@ -48,6 +49,8 @@ public static class ApiInstaller
             options.SerializerOptions.WriteIndented = true;
             options.SerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
         });
+
+        services.AddValidatorsFromAssemblyContaining<Program>();
 
         return services;
     }

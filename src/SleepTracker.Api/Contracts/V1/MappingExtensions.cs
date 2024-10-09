@@ -7,6 +7,16 @@ namespace SleepTracker.Api.Contracts.V1;
 /// </summary>
 public static class MappingExtensions
 {
+    public static SleepRecord ToModel(this SleepRecordRequest request)
+    {
+        return new SleepRecord
+        {
+            Id = Guid.NewGuid(),
+            Started = request.Started,
+            Finished = request.Finished,
+        };
+    }
+
     public static SleepRecordResponse ToResponse(this SleepRecord model)
     {
         return new SleepRecordResponse
