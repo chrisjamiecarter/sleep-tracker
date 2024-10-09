@@ -35,12 +35,12 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 
     private static OpenApiInfo CreateInfoForApiVersion(ApiVersionDescription description)
     {
-        var text = new StringBuilder("An example application with OpenAPI, Swashbuckle, and API versioning.");
+        var text = new StringBuilder("A sleep tracking Web API with OpenAPI, Swashbuckle, and API versioning.");
         var info = new OpenApiInfo()
         {
-            Title = "Example API",
+            Title = "SleepTracker API",
             Version = description.ApiVersion.ToString(),
-            Contact = new OpenApiContact() { Name = "Bill Mei", Email = "bill.mei@somewhere.com" },
+            Contact = new OpenApiContact() { Name = "Chris Carter", Url = new Uri("https://github.com/chrisjamiecarter") },
             License = new OpenApiLicense() { Name = "MIT", Url = new Uri("https://opensource.org/licenses/MIT") }
         };
 
