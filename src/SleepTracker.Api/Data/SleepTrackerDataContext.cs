@@ -15,7 +15,7 @@ public class SleepTrackerDataContext : DbContext
     #endregion
     #region Properties
 
-    public DbSet<SleepRecord> SleepRecords { get; set; } = default!;
+    public DbSet<SleepRecord> SleepRecord { get; set; } = default!;
 
     #endregion
 }

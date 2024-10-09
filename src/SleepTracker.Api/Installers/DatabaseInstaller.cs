@@ -17,6 +17,10 @@ public static class DatabaseInstaller
             options.UseSqlServer(connectionString);
         });
 
+        services.AddScoped<ISleepTrackerRepository, SleepTrackerRepository>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        //services.AddScoped<ISeederService, SeederService>();
+
         return services;
     }
 
