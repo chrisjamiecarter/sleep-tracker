@@ -1,9 +1,11 @@
-import {AfterViewInit, Component, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
 import {MatSort, MatSortModule} from '@angular/material/sort';
 import {MatTableDataSource, MatTableModule} from '@angular/material/table';
 import {MatInputModule} from '@angular/material/input';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import { SleepRecordService } from '../shared/sleep-record.service';
+import { SleepRecord } from '../shared/sleep-record.interface';
 
 export interface UserData {
   id: string;
@@ -52,19 +54,31 @@ const NAMES: string[] = [
   templateUrl: './sleep-records.component.html',
   styleUrl: './sleep-records.component.scss'
 })
-export class SleepRecordsComponent implements AfterViewInit {
-  displayedColumns: string[] = ['id', 'name', 'progress', 'fruit'];
-  dataSource: MatTableDataSource<UserData>;
+export class SleepRecordsComponent implements AfterViewInit, OnInit {
+  displayedColumns: string[] = ['id', 'started', 'finished'];
+  dataSource: MatTableDataSource<SleepRecord>;
+  sleepRecords: SleepRecord[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor() {
+  constructor(private sleepRecordService: SleepRecordService) {
     // Create 100 users
-    const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
+    //const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
 
     // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(users);
+    this.dataSource = new MatTableDataSource(this.sleepRecords);
+  }
+
+  ngOnInit(): void {
+    this.sleepRecordService.SleepRecords.subscribe((records) => {
+      this.sleepRecords = records;
+      this.dataSource = new MatTableDataSource(records);
+      this.dataSource.paginator = this.paginator;
+      this.dataSource.sort = this.sort;
+    });
+
+    this.sleepRecordService.getSleepRecords();
   }
 
   ngAfterViewInit() {
@@ -80,20 +94,4 @@ export class SleepRecordsComponent implements AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-}
-
-/** Builds and returns a new User. */
-function createNewUser(id: number): UserData {
-  const name =
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))] +
-    ' ' +
-    NAMES[Math.round(Math.random() * (NAMES.length - 1))].charAt(0) +
-    '.';
-
-  return {
-    id: id.toString(),
-    name: name,
-    progress: Math.round(Math.random() * 100).toString(),
-    fruit: FRUITS[Math.round(Math.random() * (FRUITS.length - 1))],
-  };
 }
