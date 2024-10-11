@@ -1,9 +1,9 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator';
-import {MatSort, MatSortModule} from '@angular/material/sort';
-import {MatTableDataSource, MatTableModule} from '@angular/material/table';
-import {MatInputModule} from '@angular/material/input';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { MatSort, MatSortModule } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { SleepRecordService } from '../shared/sleep-record.service';
 import { SleepRecord } from '../shared/sleep-record.interface';
 
@@ -50,9 +50,15 @@ const NAMES: string[] = [
 @Component({
   selector: 'app-sleep-records',
   standalone: true,
-  imports: [MatFormFieldModule, MatInputModule, MatTableModule, MatSortModule, MatPaginatorModule],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    MatTableModule,
+    MatSortModule,
+    MatPaginatorModule,
+  ],
   templateUrl: './sleep-records.component.html',
-  styleUrl: './sleep-records.component.scss'
+  styleUrl: './sleep-records.component.scss',
 })
 export class SleepRecordsComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['id', 'started', 'finished'];
