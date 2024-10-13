@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SleepRecord } from './sleep-record.interface';
+import { CreateSleepRecord } from './create-sleep-record.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,21 @@ export class SleepRecordService {
 
   constructor(private http: HttpClient) {}
 
+  createSleepRecord(request: CreateSleepRecord): Observable<boolean> {
+    return this.http
+      .post<SleepRecord>(this.url, request, this.httpOptions)
+      .pipe(
+        map((record) => {
+          this.getSleepRecords();
+          return true;
+        }),
+        catchError((error) => {
+          console.error('ERROR - Adding Sleep Record: ', error);
+          return of(false);
+        })
+      );
+  }
+  
   getSleepRecords(): void {
     this.http.get<SleepRecord[]>(this.url).subscribe(
       (records) => {
