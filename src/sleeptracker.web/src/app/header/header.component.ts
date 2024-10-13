@@ -25,7 +25,7 @@ export class HeaderComponent {
 
   openAddSleepRecordDialog() {
     this.addSleepRecordRialog.open(AddSleepRecordDialogComponent, {
-
+      width: "20rem"
     });
   }
 }
