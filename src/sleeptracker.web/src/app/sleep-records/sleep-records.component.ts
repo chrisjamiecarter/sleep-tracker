@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -11,6 +12,7 @@ import { SleepRecord } from '../shared/sleep-record.interface';
   selector: 'app-sleep-records',
   standalone: true,
   imports: [
+    DatePipe,
     MatFormFieldModule,
     MatInputModule,
     MatTableModule,
