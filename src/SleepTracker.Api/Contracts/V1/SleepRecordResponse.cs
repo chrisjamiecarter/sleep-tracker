@@ -14,5 +14,18 @@ public class SleepRecordResponse
 
     public required DateTime Finished { get; set; }
 
+    public string Duration
+    { 
+        get
+        {
+            var duration = Finished - Started;
+
+            var hours = Convert.ToInt32(duration.TotalHours);
+            var minutes = duration.Minutes;
+
+            return $"{hours:D2}:{minutes:D2}";
+        }
+    }
+
     #endregion
 }

@@ -23,7 +23,7 @@ import { SleepRecord } from '../shared/sleep-record.interface';
   styleUrl: './sleep-records.component.scss',
 })
 export class SleepRecordsComponent implements AfterViewInit, OnInit {
-  displayedColumns: string[] = ['id', 'started', 'finished'];
+  displayedColumns: string[] = ['id', 'started', 'finished', 'duration'];
   dataSource: MatTableDataSource<SleepRecord>;
   sleepRecords: SleepRecord[] = [];
 
