@@ -14,20 +14,39 @@
     <!-- Started Column -->
     <ng-container matColumnDef="started">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Started</th>
-      <td mat-cell *matCellDef="let row">{{ row.started | date:'yyyy-MM-dd HH:mm' }}</td>
+      <td mat-cell *matCellDef="let row">
+        {{ row.started | date : "yyyy-MM-dd HH:mm" }}
+      </td>
     </ng-container>
 
     <!-- Finished Column -->
     <ng-container matColumnDef="finished">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Finished</th>
-      <td mat-cell *matCellDef="let row">{{ row.finished | date:'yyyy-MM-dd HH:mm' }}</td>
+      <td mat-cell *matCellDef="let row">
+        {{ row.finished | date : "yyyy-MM-dd HH:mm" }}
+      </td>
     </ng-container>
 
     <!-- Duration Column -->
     <ng-container matColumnDef="duration">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Duration </th>
-        <td mat-cell *matCellDef="let row"> {{ row.duration }} </td>
-      </ng-container>
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Duration</th>
+      <td mat-cell *matCellDef="let row">{{ row.duration }}</td>
+    </ng-container>
+
+    <!-- Actions Column -->
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let row">
+        <div class="buttons-container">
+          <button mat-icon-button aria-label="Edit icon">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button aria-label="Delete icon">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </td>
+    </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>

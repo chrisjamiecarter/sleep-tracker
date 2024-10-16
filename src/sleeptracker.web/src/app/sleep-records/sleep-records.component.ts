@@ -1,6 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
@@ -13,7 +15,9 @@ import { SleepRecord } from '../shared/sleep-record.interface';
   standalone: true,
   imports: [
     DatePipe,
+    MatButtonModule,
     MatFormFieldModule,
+    MatIconModule,
     MatInputModule,
     MatTableModule,
     MatSortModule,
@@ -23,7 +27,7 @@ import { SleepRecord } from '../shared/sleep-record.interface';
   styleUrl: './sleep-records.component.scss',
 })
 export class SleepRecordsComponent implements AfterViewInit, OnInit {
-  displayedColumns: string[] = ['id', 'started', 'finished', 'duration'];
+  displayedColumns: string[] = ['id', 'started', 'finished', 'duration', 'actions'];
   dataSource: MatTableDataSource<SleepRecord>;
   sleepRecords: SleepRecord[] = [];
 
