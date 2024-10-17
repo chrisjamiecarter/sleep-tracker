@@ -57,9 +57,8 @@ export class DeleteSleepRecordDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.sleepRecordForm = this.formBuilder.group({
-      id: [this.data.id ?? '', Validators.required],
-      started: [this.data.started ?? '', Validators.required],
-      finished: [this.data.finished ?? '', Validators.required],
+      started: this.data.started,
+      finished: this.data.finished,
     });
   }
 
@@ -67,7 +66,7 @@ export class DeleteSleepRecordDialogComponent implements OnInit {
     if (this.sleepRecordForm.valid) {
       this.inProgress = true;
       this.sleepRecordService
-        .deleteSleepRecord(this.sleepRecordForm.value.id)
+        .deleteSleepRecord(this.data.id)
         .subscribe((result) => {
           this.inProgress = false;
           if (result) {
