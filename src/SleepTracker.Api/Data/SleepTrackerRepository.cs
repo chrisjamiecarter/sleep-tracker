@@ -41,7 +41,7 @@ public class SleepTrackerRepository : ISleepTrackerRepository
 
     public async Task<IEnumerable<SleepRecord>> ReturnAsync()
     {
-        return await _dataContext.SleepRecord.OrderBy(o => o.Started).ToListAsync();
+        return await _dataContext.SleepRecord.OrderByDescending(o => o.Started).ToListAsync();
     }
 
     public async Task<SleepRecord?> ReturnAsync(Guid id)
