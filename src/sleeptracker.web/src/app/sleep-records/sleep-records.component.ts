@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -9,6 +10,8 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SleepRecordService } from '../shared/sleep-record.service';
 import { SleepRecord } from '../shared/sleep-record.interface';
+import { DeleteSleepRecordDialogComponent } from './delete-sleep-record-dialog/delete-sleep-record-dialog.component';
+import { UpdateSleepRecordDialogComponent } from './update-sleep-record-dialog/update-sleep-record-dialog.component';
 
 @Component({
   selector: 'app-sleep-records',
@@ -27,8 +30,9 @@ import { SleepRecord } from '../shared/sleep-record.interface';
   styleUrl: './sleep-records.component.scss',
 })
 export class SleepRecordsComponent implements AfterViewInit, OnInit {
-  displayedColumns: string[] = ['id', 'started', 'finished', 'duration', 'actions'];
+  displayedColumns: string[] = ['started', 'finished', 'duration', 'actions'];
   dataSource: MatTableDataSource<SleepRecord>;
+  matDialog = inject(MatDialog);
   sleepRecords: SleepRecord[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -61,5 +65,21 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  onDeleteSleepRecord(sleepRecord: SleepRecord) {
+    console.log("DELETE", sleepRecord);
+    this.matDialog.open(DeleteSleepRecordDialogComponent, {
+      width: "20rem",
+      data: sleepRecord,
+    })
+  }
+  
+  onUpdateSleepRecord(sleepRecord: SleepRecord) {
+    console.log("UPDATE", sleepRecord);
+    this.matDialog.open(UpdateSleepRecordDialogComponent, {
+      width: "20rem",
+      data: sleepRecord,
+    })
   }
 }
