@@ -35,6 +35,21 @@ export class SleepRecordService {
       );
   }
   
+  deleteSleepRecord(id: string): Observable<boolean> {
+    return this.http
+      .delete<SleepRecord>(`${this.url}/${id}`)
+      .pipe(
+        map((record) => {
+          this.getSleepRecords();
+          return true;
+        }),
+        catchError((error) => {
+          console.error('ERROR - Deleting Sleep Record: ', error);
+          return of(false);
+        })
+      );
+  }
+
   getSleepRecords(): void {
     this.http.get<SleepRecord[]>(this.url).subscribe(
       (records) => {
@@ -44,5 +59,20 @@ export class SleepRecordService {
         console.error('ERROR - Fetching Sleep Records: ', error);
       }
     );
+  }
+  
+  updateSleepRecord(request: SleepRecord): Observable<boolean> {
+    return this.http
+      .put<SleepRecord>(`${this.url}/${request.id}`, request, this.httpOptions)
+      .pipe(
+        map((record) => {
+          this.getSleepRecords();
+          return true;
+        }),
+        catchError((error) => {
+          console.error('ERROR - Updating Sleep Record: ', error);
+          return of(false);
+        })
+      );
   }
 }
