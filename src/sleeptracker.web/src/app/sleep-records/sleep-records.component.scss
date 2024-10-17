@@ -17,6 +17,11 @@ th {
   justify-content: flex-end;
 }
 
+.filter-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .table-container {
   max-width: 60rem;
   margin: 0 auto;

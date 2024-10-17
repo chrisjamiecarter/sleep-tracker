@@ -2,7 +2,9 @@ import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
@@ -18,13 +20,16 @@ import { UpdateSleepRecordDialogComponent } from './update-sleep-record-dialog/u
   standalone: true,
   imports: [
     DatePipe,
+    FormsModule,
     MatButtonModule,
+    MatDatepickerModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
+    ReactiveFormsModule,
   ],
   templateUrl: './sleep-records.component.html',
   styleUrl: './sleep-records.component.scss',
@@ -32,8 +37,29 @@ import { UpdateSleepRecordDialogComponent } from './update-sleep-record-dialog/u
 export class SleepRecordsComponent implements AfterViewInit, OnInit {
   displayedColumns: string[] = ['started', 'finished', 'duration', 'actions'];
   dataSource: MatTableDataSource<SleepRecord>;
+  filterFromDate: Date | null = null;
+  filterToDate: Date | null = null;
   matDialog = inject(MatDialog);
   sleepRecords: SleepRecord[] = [];
+
+  customFilterPredicate = (data: SleepRecord, filter: string): boolean => {
+    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    console.log("fromDate", fromDate);
+    const toDate = this.filterToDate ? new Date(this.filterToDate).getTime() : null;
+    console.log("toDate", toDate);
+    const startedDate = new Date(data.started).getTime();
+    console.log("startedDate", startedDate);
+
+    if (fromDate && toDate) {
+      return startedDate >= fromDate && startedDate <= toDate;
+    } else if (fromDate) {
+      return startedDate >= fromDate;
+    } else if (toDate) {
+      return startedDate <= toDate;
+    }
+
+    return true;
+  };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -58,17 +84,35 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
+  applyFilter() {
+    console.log("applyFilter");
+    console.log("filterFromDate", this.filterFromDate);
+    console.log("filterFromTo", this.filterToDate);
+    let filteredRecords = this.sleepRecords;
+    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
+    const toDate = this.filterToDate ? new Date(this.filterToDate).getTime() : null;
+    
+    filteredRecords = this.sleepRecords.filter((record) =>{
+      const startedDate = record.started ? new Date(record.started).getTime() : null;
 
+      if (fromDate && toDate && startedDate) {
+        return startedDate >= fromDate && startedDate <= toDate;
+      } else if (fromDate && startedDate) {
+        return startedDate >= fromDate;
+      } else if (toDate && startedDate) {
+        return startedDate <= toDate;
+      }
+      return true;
+    });
+
+    this.dataSource = new MatTableDataSource(filteredRecords);
+    //this.dataSource.filter = '';  // Note: This just triggers the custom filtering.
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
   }
 
   onDeleteSleepRecord(sleepRecord: SleepRecord) {
-    console.log("DELETE", sleepRecord);
     this.matDialog.open(DeleteSleepRecordDialogComponent, {
       width: "20rem",
       data: sleepRecord,
@@ -76,7 +120,6 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
   }
   
   onUpdateSleepRecord(sleepRecord: SleepRecord) {
-    console.log("UPDATE", sleepRecord);
     this.matDialog.open(UpdateSleepRecordDialogComponent, {
       width: "20rem",
       data: sleepRecord,
