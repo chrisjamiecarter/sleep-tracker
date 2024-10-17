@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { SleepRecord } from './sleep-record.interface';
 import { CreateSleepRecord } from './create-sleep-record.interface';
+import { UpdateSleepRecord } from './update-sleep-record.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +62,7 @@ export class SleepRecordService {
     );
   }
   
-  updateSleepRecord(request: SleepRecord): Observable<boolean> {
+  updateSleepRecord(request: UpdateSleepRecord): Observable<boolean> {
     return this.http
       .put<SleepRecord>(`${this.url}/${request.id}`, request, this.httpOptions)
       .pipe(

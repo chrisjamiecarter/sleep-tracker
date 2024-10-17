@@ -25,7 +25,7 @@ import { SuccessSnackBarComponent } from '../../snack-bars/success-snack-bar/suc
 import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-snack-bar.component';
 
 @Component({
-  selector: 'app-add-sleep-record-dialog',
+  selector: 'app-create-sleep-record-dialog',
   standalone: true,
   imports: [
     CommonModule,
@@ -40,18 +40,18 @@ import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-s
     MatInputModule,
     MatProgressSpinnerModule,
   ],
-  templateUrl: './add-sleep-record-dialog.component.html',
-  styleUrl: './add-sleep-record-dialog.component.scss',
+  templateUrl: './create-sleep-record-dialog.component.html',
+  styleUrl: './create-sleep-record-dialog.component.scss',
 })
-export class AddSleepRecordDialogComponent implements OnInit {
+export class CreateSleepRecordDialogComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   sleepRecordForm!: FormGroup;
-  isCreating: boolean = false;
+  inProgress: boolean = false;
 
   constructor(
     private sleepRecordService: SleepRecordService,
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<AddSleepRecordDialogComponent>,
+    private dialogRef: MatDialogRef<CreateSleepRecordDialogComponent>,
   ) {}
 
   ngOnInit(): void {
@@ -63,18 +63,18 @@ export class AddSleepRecordDialogComponent implements OnInit {
 
   onCreate() {
     if (this.sleepRecordForm.valid) {
-      this.isCreating = true;
+      this.inProgress = true;
       const request: CreateSleepRecord = {
-        started: this.sleepRecordForm.value.started ?? '',
-        finished: this.sleepRecordForm.value.finished ?? '',
+        started: this.sleepRecordForm.value.started,
+        finished: this.sleepRecordForm.value.finished,
       };
       this.sleepRecordService.createSleepRecord(request).subscribe((result) => {
-        this.isCreating = false;
+        this.inProgress = false;
         if (result) {
-          this.openSuccessSnackBar('Sleep recorded successfully!');
+          this.openSuccessSnackBar('Sleep created successfully!');
           this.dialogRef.close();
         } else {
-          this.openErrorSnackBar('Unable to record Sleep!');
+          this.openErrorSnackBar('Unable to create Sleep!');
         }
       });
     }

@@ -11,7 +11,7 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { AddSleepRecordDialogComponent } from '../sleep-records/add-sleep-record-dialog/add-sleep-record-dialog.component';
+import { CreateSleepRecordDialogComponent } from '../sleep-records/create-sleep-record-dialog/create-sleep-record-dialog.component';
 
 @Component({
   selector: 'app-header',
@@ -21,10 +21,10 @@ import { AddSleepRecordDialogComponent } from '../sleep-records/add-sleep-record
   styleUrl: './header.component.scss',
 })
 export class HeaderComponent {
-  addSleepRecordRialog = inject(MatDialog);
+  matDialog = inject(MatDialog);
 
-  openAddSleepRecordDialog() {
-    this.addSleepRecordRialog.open(AddSleepRecordDialogComponent, {
+  onAddSleepRecordButton() {
+    this.matDialog.open(CreateSleepRecordDialogComponent, {
       width: "20rem"
     });
   }
