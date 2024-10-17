@@ -13,10 +13,12 @@
       <input matInput type="datetime-local" formControlName="finished" required />
       <mat-icon matPrefix>alarm</mat-icon>
     </mat-form-field>
+
   </form>
 </mat-dialog-content>
 
-<mat-dialog-actions [align]="'end'">
-  <button mat-raised-button mat-dialog-close color="accent">Cancel</button>
-  <button mat-raised-button (click)="onCreate()">Create</button>
+<mat-dialog-actions class="buttons-container">
+  <mat-spinner *ngIf="isCreating" [diameter]="40" mode="indeterminate"></mat-spinner>
+  <button mat-raised-button mat-dialog-close color="accent" [disabled]="isCreating">Cancel</button>
+  <button mat-raised-button (click)="onCreate()" [disabled]="isCreating">Create</button>
 </mat-dialog-actions>

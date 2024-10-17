@@ -1,10 +1,23 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogModule, MatDialogTitle, MatDialogContent } from '@angular/material/dialog';
+import {
+  MatDialogModule,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SleepRecordService } from '../../shared/sleep-record.service';
 import { CreateSleepRecord } from '../../shared/create-sleep-record.interface';
@@ -15,6 +28,7 @@ import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-s
   selector: 'app-add-sleep-record-dialog',
   standalone: true,
   imports: [
+    CommonModule,
     FormsModule,
     ReactiveFormsModule,
     MatButtonModule,
@@ -24,6 +38,7 @@ import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-s
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatProgressSpinnerModule,
   ],
   templateUrl: './add-sleep-record-dialog.component.html',
   styleUrl: './add-sleep-record-dialog.component.scss',
@@ -31,25 +46,33 @@ import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-s
 export class AddSleepRecordDialogComponent implements OnInit {
   private _snackBar = inject(MatSnackBar);
   sleepRecordForm!: FormGroup;
-  
-  constructor(private sleepRecordService: SleepRecordService, private formBuilder: FormBuilder) { }
+  isCreating: boolean = false;
+
+  constructor(
+    private sleepRecordService: SleepRecordService,
+    private formBuilder: FormBuilder,
+    private dialogRef: MatDialogRef<AddSleepRecordDialogComponent>,
+  ) {}
 
   ngOnInit(): void {
     this.sleepRecordForm = this.formBuilder.group({
       started: ['', Validators.required],
       finished: ['', Validators.required],
-    })
+    });
   }
 
   onCreate() {
     if (this.sleepRecordForm.valid) {
-      const request : CreateSleepRecord = {
+      this.isCreating = true;
+      const request: CreateSleepRecord = {
         started: this.sleepRecordForm.value.started ?? '',
         finished: this.sleepRecordForm.value.finished ?? '',
       };
       this.sleepRecordService.createSleepRecord(request).subscribe((result) => {
+        this.isCreating = false;
         if (result) {
           this.openSuccessSnackBar('Sleep recorded successfully!');
+          this.dialogRef.close();
         } else {
           this.openErrorSnackBar('Unable to record Sleep!');
         }
