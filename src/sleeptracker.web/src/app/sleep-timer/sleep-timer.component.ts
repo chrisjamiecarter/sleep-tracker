@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -5,33 +6,48 @@ import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-sleep-timer',
   standalone: true,
-  imports: [MatButtonModule, MatCardModule],
+  imports: [DatePipe, MatButtonModule, MatCardModule],
   templateUrl: './sleep-timer.component.html',
   styleUrl: './sleep-timer.component.scss',
 })
 export class SleepTimerComponent implements OnDestroy {
-  counter: number | undefined;
+  counter: number = 0;
+  timerString: string = this.getTimerString(this.counter);
   timerRef: any;
   running: boolean = false;
-  startText = 'Start';
 
-  startTimer() {
+  getTimerString(milliseconds: number): string {
+    const hours = Math.floor(milliseconds % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
+    const minutes = Math.floor(milliseconds % (1000 * 60 * 60) / (1000 * 60));
+    const seconds = Math.floor(milliseconds % (1000 * 60) / 1000);
+    
+    let builder: string = '';
+    builder += ("00" + hours).slice(-2)
+    builder += ":";
+    builder += ("00" + minutes).slice(-2)
+    builder += ":";
+    builder += ("00" + seconds).slice(-2)
+    return builder;
+  }
+
+  onStartTimer() {
     this.running = true;
     const startTime = Date.now() - (this.counter || 0);
     this.timerRef = setInterval(() => {
       this.counter = Date.now() - startTime;
+      this.timerString = this.getTimerString(this.counter);
     }, 1000);
   }
 
-  stopTimer() {
+  onPauseTimer() {
     this.running = false;
-      clearInterval(this.timerRef);
+    clearInterval(this.timerRef);
   }
 
-  clearTimer() {
+  onResetTimer() {
     this.running = false;
-    this.startText = 'Start';
-    this.counter = undefined;
+    this.counter = 0;
+    this.timerString = this.getTimerString(this.counter);
     clearInterval(this.timerRef);
   }
 
