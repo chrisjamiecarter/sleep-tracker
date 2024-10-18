@@ -1,53 +1,84 @@
-import { DatePipe } from '@angular/common';
-import { Component, OnDestroy } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { Component, inject, OnDestroy } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router } from '@angular/router';
+import { SleepRecordService } from '../shared/sleep-record.service';
+import { CreateSleepRecord } from '../shared/create-sleep-record.interface';
+import { SuccessSnackBarComponent } from '../snack-bars/success-snack-bar/success-snack-bar.component';
+import { ErrorSnackBarComponent } from '../snack-bars/error-snack-bar/error-snack-bar.component';
 
 @Component({
   selector: 'app-sleep-timer',
   standalone: true,
-  imports: [DatePipe, MatButtonModule, MatCardModule],
+  imports: [
+    CommonModule,
+    DatePipe,
+    FormsModule,
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+  ],
   templateUrl: './sleep-timer.component.html',
   styleUrl: './sleep-timer.component.scss',
 })
 export class SleepTimerComponent implements OnDestroy {
+  private _snackBar = inject(MatSnackBar);
   counter: number = 0;
-  timerString: string = this.getTimerString(this.counter);
+  inProgress: boolean = false;
   timerRef: any;
-  running: boolean = false;
+  timerRunning: boolean = false;
+  started: Date | undefined;
+  finished: Date | undefined;
+
+  constructor(
+    private sleepRecordService: SleepRecordService,
+    private router: Router
+  ) {}
 
   getTimerString(milliseconds: number): string {
-    const hours = Math.floor(milliseconds % (1000 * 60 * 60 * 24) / (1000 * 60 * 60));
-    const minutes = Math.floor(milliseconds % (1000 * 60 * 60) / (1000 * 60));
-    const seconds = Math.floor(milliseconds % (1000 * 60) / 1000);
-    
+    const hours = Math.floor(
+      (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((milliseconds % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((milliseconds % (1000 * 60)) / 1000);
+
     let builder: string = '';
-    builder += ("00" + hours).slice(-2)
-    builder += ":";
-    builder += ("00" + minutes).slice(-2)
-    builder += ":";
-    builder += ("00" + seconds).slice(-2)
+    builder += `${hours}:`.padStart(3, '0');
+    builder += `${minutes}:`.padStart(3, '0');
+    builder += `${seconds}`.padStart(2, '0');
     return builder;
   }
 
   onStartTimer() {
-    this.running = true;
+    this.timerRunning = true;
+    if (!this.started)
+    {
+      this.started = new Date();
+    }
     const startTime = Date.now() - (this.counter || 0);
     this.timerRef = setInterval(() => {
       this.counter = Date.now() - startTime;
-      this.timerString = this.getTimerString(this.counter);
     }, 1000);
   }
 
   onPauseTimer() {
-    this.running = false;
+    this.timerRunning = false;
+    this.finished = new Date();
     clearInterval(this.timerRef);
   }
 
   onResetTimer() {
-    this.running = false;
+    this.timerRunning = false;
+    this.started = undefined;
+    this.finished = undefined;
     this.counter = 0;
-    this.timerString = this.getTimerString(this.counter);
     clearInterval(this.timerRef);
   }
 
@@ -55,4 +86,48 @@ export class SleepTimerComponent implements OnDestroy {
     clearInterval(this.timerRef);
   }
 
+  onCancel() {
+    this.router.navigate(['/']);
+  }
+
+  onCreate() {
+    if (this.started && this.finished) {
+      this.inProgress = true;
+      const request: CreateSleepRecord = {
+        started: this.started,
+        finished: this.finished,
+      };
+      this.sleepRecordService.createSleepRecord(request).subscribe((result) => {
+        this.inProgress = false;
+        if (result) {
+          this.openSuccessSnackBar('Sleep created successfully!');
+          this.router.navigate(['/']);
+        } else {
+          this.openErrorSnackBar('Unable to create Sleep!');
+        }
+      });
+    }
+  }
+
+  isAbleToCreate(): boolean {
+    if (!this.started && !this.finished)
+    {
+      return false;
+    }
+    return !this.timerRunning || this.inProgress;
+  }
+
+  openErrorSnackBar(message: string) {
+    this._snackBar.openFromComponent(ErrorSnackBarComponent, {
+      data: message,
+      duration: 3000,
+    });
+  }
+
+  openSuccessSnackBar(message: string) {
+    this._snackBar.openFromComponent(SuccessSnackBarComponent, {
+      data: message,
+      duration: 3000,
+    });
+  }
 }
