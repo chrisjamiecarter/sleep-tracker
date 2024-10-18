@@ -107,4 +107,10 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
       data: sleepRecord,
     })
   }
+  
+  onResetFilter() {
+    this.filterFromDate = null;
+    this.filterToDate = null;
+    this.applyFilter();
+  }
 }
