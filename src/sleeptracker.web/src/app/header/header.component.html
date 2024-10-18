@@ -4,8 +4,10 @@
     <span>Sleep Tracker</span>
   </a>
   <span class="header-spacer"></span>
-  <button mat-raised-button>Sleep Timer</button>
-  <button mat-raised-button (click)="onAddSleepRecordButton()">
-    Add Sleep Record
-  </button>
+  <a mat-raised-button routerLink="/">
+    Sleep Records
+  </a>
+  <a mat-raised-button routerLink="/sleep/timer">
+    Sleep Timer
+  </a>
 </mat-toolbar>

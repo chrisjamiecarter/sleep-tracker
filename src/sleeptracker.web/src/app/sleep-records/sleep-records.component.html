@@ -42,7 +42,14 @@
 
       <!-- Actions Column -->
       <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
+        <th mat-header-cell *matHeaderCellDef>
+          <div class="buttons-container">
+            <button mat-stroked-button (click)="onCreateSleepRecord()">
+              <mat-icon>add</mat-icon>
+              Add
+            </button>            
+          </div>
+        </th>
         <td mat-cell *matCellDef="let row">
           <div class="buttons-container">
             <button mat-icon-button aria-label="Edit icon" (click)="onUpdateSleepRecord(row)">

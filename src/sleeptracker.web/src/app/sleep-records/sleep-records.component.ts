@@ -14,6 +14,7 @@ import { SleepRecordService } from '../shared/sleep-record.service';
 import { SleepRecord } from '../shared/sleep-record.interface';
 import { DeleteSleepRecordDialogComponent } from './delete-sleep-record-dialog/delete-sleep-record-dialog.component';
 import { UpdateSleepRecordDialogComponent } from './update-sleep-record-dialog/update-sleep-record-dialog.component';
+import { CreateSleepRecordDialogComponent } from './create-sleep-record-dialog/create-sleep-record-dialog.component';
 
 @Component({
   selector: 'app-sleep-records',
@@ -110,6 +111,12 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+
+  onCreateSleepRecord() {
+    this.matDialog.open(CreateSleepRecordDialogComponent, {
+      width: "20rem"
+    });
   }
 
   onDeleteSleepRecord(sleepRecord: SleepRecord) {
