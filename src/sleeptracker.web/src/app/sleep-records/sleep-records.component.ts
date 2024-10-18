@@ -43,25 +43,6 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
   matDialog = inject(MatDialog);
   sleepRecords: SleepRecord[] = [];
 
-  customFilterPredicate = (data: SleepRecord, filter: string): boolean => {
-    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
-    console.log("fromDate", fromDate);
-    const toDate = this.filterToDate ? new Date(this.filterToDate).getTime() : null;
-    console.log("toDate", toDate);
-    const startedDate = new Date(data.started).getTime();
-    console.log("startedDate", startedDate);
-
-    if (fromDate && toDate) {
-      return startedDate >= fromDate && startedDate <= toDate;
-    } else if (fromDate) {
-      return startedDate >= fromDate;
-    } else if (toDate) {
-      return startedDate <= toDate;
-    }
-
-    return true;
-  };
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -72,9 +53,7 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.sleepRecordService.SleepRecords.subscribe((records) => {
       this.sleepRecords = records;
-      this.dataSource = new MatTableDataSource(records);
-      this.dataSource.paginator = this.paginator;
-      this.dataSource.sort = this.sort;
+      this.applyFilter();
     });
 
     this.sleepRecordService.getSleepRecords();
@@ -86,14 +65,9 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
   }
 
   applyFilter() {
-    console.log("applyFilter");
-    console.log("filterFromDate", this.filterFromDate);
-    console.log("filterFromTo", this.filterToDate);
-    let filteredRecords = this.sleepRecords;
     const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
     const toDate = this.filterToDate ? new Date(this.filterToDate).getTime() : null;
-    
-    filteredRecords = this.sleepRecords.filter((record) =>{
+    const filteredRecords = this.sleepRecords.filter((record) =>{
       const startedDate = record.started ? new Date(record.started).getTime() : null;
 
       if (fromDate && toDate && startedDate) {
@@ -107,7 +81,8 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
     });
 
     this.dataSource = new MatTableDataSource(filteredRecords);
-    //this.dataSource.filter = '';  // Note: This just triggers the custom filtering.
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
