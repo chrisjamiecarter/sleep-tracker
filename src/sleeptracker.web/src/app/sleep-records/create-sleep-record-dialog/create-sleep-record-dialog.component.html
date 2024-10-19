@@ -1,4 +1,4 @@
-<h2 mat-dialog-title cdkFocusInitial>Add Sleep Record</h2>
+<h2 mat-dialog-title>Add Sleep Record</h2>
 
 <mat-dialog-content>
   <form [formGroup]="sleepRecordForm" class="form-container">
@@ -37,6 +37,7 @@
     mat-dialog-close
     color="accent"
     [disabled]="inProgress"
+    cdkFocusInitial
   >
     Cancel
   </button>
