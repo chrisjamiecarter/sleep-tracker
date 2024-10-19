@@ -23,6 +23,7 @@ import { SleepRecordService } from '../../shared/sleep-record.service';
 import { CreateSleepRecord } from '../../shared/create-sleep-record.interface';
 import { SuccessSnackBarComponent } from '../../snack-bars/success-snack-bar/success-snack-bar.component';
 import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-snack-bar.component';
+import { finishedDateValidator } from '../../validators/finished-date-validator.directive';
 
 @Component({
   selector: 'app-create-sleep-record-dialog',
@@ -51,17 +52,29 @@ export class CreateSleepRecordDialogComponent implements OnInit {
   constructor(
     private sleepRecordService: SleepRecordService,
     private formBuilder: FormBuilder,
-    private dialogRef: MatDialogRef<CreateSleepRecordDialogComponent>,
+    private dialogRef: MatDialogRef<CreateSleepRecordDialogComponent>
   ) {}
 
   ngOnInit(): void {
-    this.sleepRecordForm = this.formBuilder.group({
-      started: ['', Validators.required],
-      finished: ['', Validators.required],
-    });
+    this.sleepRecordForm = this.formBuilder.group(
+      {
+        started: ['', Validators.required],
+        finished: ['', Validators.required],
+      },
+      {
+        validators: finishedDateValidator,
+      }
+    );
   }
 
   onCreate() {
+    if (this.sleepRecordForm.hasError('finishedDateInvalid')) {
+      // I do not know why this is not working on the form itself. But setting here resolves it.
+      this.sleepRecordForm
+        .get('finished')
+        ?.setErrors({ finishedDateInvalid: true });
+    }
+
     if (this.sleepRecordForm.valid) {
       this.inProgress = true;
       const request: CreateSleepRecord = {
@@ -77,6 +90,8 @@ export class CreateSleepRecordDialogComponent implements OnInit {
           this.openErrorSnackBar('Unable to create Sleep!');
         }
       });
+    } else {
+      this.sleepRecordForm.markAllAsTouched();
     }
   }
 

@@ -10,6 +10,9 @@
         formControlName="started"
         required
       />
+      <mat-error *ngIf="sleepRecordForm.get('started')?.hasError('required')">
+        Start date is required.
+      </mat-error>
       <mat-icon matPrefix>bedtime</mat-icon>
     </mat-form-field>
 
@@ -21,6 +24,14 @@
         formControlName="finished"
         required
       />
+      <mat-error *ngIf="sleepRecordForm.get('finished')?.hasError('required')">
+        Finish date is required.
+      </mat-error>
+      <mat-error
+        *ngIf="sleepRecordForm.get('finished')?.hasError('finishedDateInvalid')"
+      >
+        Finish date must be later than start date.
+      </mat-error>
       <mat-icon matPrefix>alarm</mat-icon>
     </mat-form-field>
   </form>
