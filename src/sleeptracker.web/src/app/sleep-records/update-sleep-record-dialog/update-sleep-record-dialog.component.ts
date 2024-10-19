@@ -24,6 +24,7 @@ import { SleepRecordService } from '../../shared/sleep-record.service';
 import { UpdateSleepRecord } from '../../shared/update-sleep-record.interface';
 import { SuccessSnackBarComponent } from '../../snack-bars/success-snack-bar/success-snack-bar.component';
 import { ErrorSnackBarComponent } from '../../snack-bars/error-snack-bar/error-snack-bar.component';
+import { finishedDateValidator } from '../../validators/finished-date-validator.directive';
 
 @Component({
   selector: 'app-update-sleep-record-dialog',
@@ -57,14 +58,26 @@ export class UpdateSleepRecordDialogComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.sleepRecordForm = this.formBuilder.group({
-      id: [this.data.id ?? '', Validators.required],
-      started: [this.data.started ?? '', Validators.required],
-      finished: [this.data.finished ?? '', Validators.required],
-    });
+    this.sleepRecordForm = this.formBuilder.group(
+      {
+        id: [this.data.id ?? '', Validators.required],
+        started: [this.data.started ?? '', Validators.required],
+        finished: [this.data.finished ?? '', Validators.required],
+      },
+      {
+        validators: finishedDateValidator,
+      }
+    );
   }
 
   onUpdate() {
+    if (this.sleepRecordForm.hasError('finishedDateInvalid')) {
+      // I do not know why this is not working on the form itself. But setting here resolves it.
+      this.sleepRecordForm
+        .get('finished')
+        ?.setErrors({ finishedDateInvalid: true });
+    }
+
     if (this.sleepRecordForm.valid) {
       this.inProgress = true;
       const request: UpdateSleepRecord = {
