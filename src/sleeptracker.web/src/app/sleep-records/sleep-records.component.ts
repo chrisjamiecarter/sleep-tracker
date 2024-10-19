@@ -1,6 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms'; 
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -65,10 +71,16 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
   }
 
   applyFilter() {
-    const fromDate = this.filterFromDate ? new Date(this.filterFromDate).getTime() : null;
-    const toDate = this.filterToDate ? new Date(this.filterToDate).getTime() : null;
-    const filteredRecords = this.sleepRecords.filter((record) =>{
-      const startedDate = record.started ? new Date(record.started).getTime() : null;
+    const fromDate = this.filterFromDate
+      ? new Date(this.filterFromDate).getTime()
+      : null;
+    const toDate = this.filterToDate
+      ? new Date(this.addDaysToDate(this.filterToDate, 1)).getTime()
+      : null;
+    const filteredRecords = this.sleepRecords.filter((record) => {
+      const startedDate = record.started
+        ? new Date(record.started).getTime()
+        : null;
 
       if (fromDate && toDate && startedDate) {
         return startedDate >= fromDate && startedDate <= toDate;
@@ -90,27 +102,33 @@ export class SleepRecordsComponent implements AfterViewInit, OnInit {
 
   onCreateSleepRecord() {
     this.matDialog.open(CreateSleepRecordDialogComponent, {
-      width: "20rem"
+      width: '20rem',
     });
   }
 
   onDeleteSleepRecord(sleepRecord: SleepRecord) {
     this.matDialog.open(DeleteSleepRecordDialogComponent, {
-      width: "20rem",
+      width: '20rem',
       data: sleepRecord,
-    })
+    });
   }
-  
+
   onUpdateSleepRecord(sleepRecord: SleepRecord) {
     this.matDialog.open(UpdateSleepRecordDialogComponent, {
-      width: "20rem",
+      width: '20rem',
       data: sleepRecord,
-    })
+    });
   }
-  
+
   onResetFilter() {
     this.filterFromDate = null;
     this.filterToDate = null;
     this.applyFilter();
+  }
+
+  addDaysToDate(date: Date, days: number): Date {
+    var output = new Date(date.valueOf());
+    output.setDate(output.getDate() + days);
+    return output;
   }
 }
