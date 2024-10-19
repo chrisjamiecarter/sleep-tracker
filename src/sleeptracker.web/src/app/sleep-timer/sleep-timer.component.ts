@@ -94,8 +94,8 @@ export class SleepTimerComponent implements OnDestroy {
     if (this.started && this.finished) {
       this.inProgress = true;
       const request: CreateSleepRecord = {
-        started: this.started,
-        finished: this.finished,
+        started: this.getSleepRecordDate(this.started),
+        finished: this.getSleepRecordDate(this.finished),
       };
       this.sleepRecordService.createSleepRecord(request).subscribe((result) => {
         this.inProgress = false;
@@ -115,6 +115,11 @@ export class SleepTimerComponent implements OnDestroy {
       return false;
     }
     return !this.timerRunning || this.inProgress;
+  }
+
+  // NOTE: I do not care for seconds and milliseconds.
+  getSleepRecordDate(date: Date) : Date {
+    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
   }
 
   openErrorSnackBar(message: string) {
