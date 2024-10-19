@@ -1,7 +1,12 @@
 .buttons-container {
     display: flex;
     gap: 0.5rem;
-    justify-content: flex-end;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.mat-mdc-card-header {
+    justify-content: center;
 }
 
 .timer-buttons {
