@@ -1,5 +1,5 @@
 <div align="center">
-	<img src="./_resources/sleep-tracker-logo.png" alt="logo" width="100px" />
+	<img src="./_resources/sleep-tracker-logo-nobg.png" alt="logo" width="100px" />
 	<h1>Sleep Tracker</h1>
 </div>
 
