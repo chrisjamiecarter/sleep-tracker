@@ -11,6 +11,8 @@
           mat-fab
           color="primary"
           (click)="onResetTimer()"
+          matTooltip="Stops the timer and resets to 0"
+          matTooltipShowDelay="1000"
           aria-label="restart icon"
         >
           <mat-icon>restart_alt</mat-icon>
@@ -20,6 +22,8 @@
           mat-fab
           color="primary"
           (click)="onStartTimer()"
+          matTooltip="Starts the timer"
+          matTooltipShowDelay="1000"
           aria-label="play_arrow icon"
           [disabled]="timerRunning"
         >
@@ -30,6 +34,8 @@
           mat-fab
           color="primary"
           (click)="onPauseTimer()"
+          matTooltip="Pauses the timer"
+          matTooltipShowDelay="1000"
           aria-label="pause icon"
           [disabled]="!timerRunning"
         >
@@ -38,23 +44,29 @@
       </div>
     </mat-card-content>
     <mat-card-actions class="buttons-container">
-        <mat-spinner
-          *ngIf="inProgress"
-          [diameter]="40"
-          mode="indeterminate"
-        ></mat-spinner>
+      <mat-spinner
+        *ngIf="inProgress"
+        [diameter]="40"
+        mode="indeterminate"
+      ></mat-spinner>
+      <button
+        mat-stroked-button
+        mat-dialog-close
+        color="accent"
+        [disabled]="inProgress"
+        (click)="onCancel()"
+      >
+        Cancel
+      </button>
+      <div [matTooltip]="createButtonTooltip" matTooltipShowDelay="1000">
         <button
           mat-stroked-button
-          mat-dialog-close
-          color="accent"
-          [disabled]="inProgress"
-          (click)="onCancel()"
+          (click)="onCreate()"
+          [disabled]="!isAbleToCreate()"
         >
-          Cancel
-        </button>
-        <button mat-stroked-button (click)="onCreate()" [disabled]="!isAbleToCreate()">
           Create
         </button>
+      </div>
     </mat-card-actions>
   </mat-card>
 </div>

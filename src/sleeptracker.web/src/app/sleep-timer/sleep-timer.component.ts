@@ -1,12 +1,13 @@
 import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnDestroy } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { SleepRecordService } from '../shared/sleep-record.service';
 import { CreateSleepRecord } from '../shared/create-sleep-record.interface';
 import { SuccessSnackBarComponent } from '../snack-bars/success-snack-bar/success-snack-bar.component';
@@ -24,6 +25,7 @@ import { ErrorSnackBarComponent } from '../snack-bars/error-snack-bar/error-snac
     MatCardModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatTooltipModule,
   ],
   templateUrl: './sleep-timer.component.html',
   styleUrl: './sleep-timer.component.scss',
@@ -42,6 +44,14 @@ export class SleepTimerComponent implements OnDestroy {
     private router: Router
   ) {}
 
+  get createButtonTooltip(): string {
+    if (this.isAbleToCreate()) {
+      return 'Create a new sleep record';
+    } else {
+      return 'Timer must have been started and then paused in order to create a sleep record';
+    }
+  }
+
   getTimerString(milliseconds: number): string {
     const hours = Math.floor(
       (milliseconds % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
@@ -58,8 +68,7 @@ export class SleepTimerComponent implements OnDestroy {
 
   onStartTimer() {
     this.timerRunning = true;
-    if (!this.started)
-    {
+    if (!this.started) {
       this.started = new Date();
     }
     const startTime = Date.now() - (this.counter || 0);
@@ -110,16 +119,21 @@ export class SleepTimerComponent implements OnDestroy {
   }
 
   isAbleToCreate(): boolean {
-    if (!this.started && !this.finished)
-    {
+    if (!this.started && !this.finished) {
       return false;
     }
     return !this.timerRunning || this.inProgress;
   }
 
   // NOTE: I do not care for seconds and milliseconds.
-  getSleepRecordDate(date: Date) : Date {
-    return new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes());
+  getSleepRecordDate(date: Date): Date {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      date.getHours(),
+      date.getMinutes()
+    );
   }
 
   openErrorSnackBar(message: string) {
